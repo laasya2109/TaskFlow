@@ -1,0 +1,365 @@
+:root {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-color: #e0e0e0;
+    --accent-color: #2979ff;
+    /* Dark Blue */
+    --accent-hover: #1565c0;
+    --danger-color: #ff5252;
+    --secondary-text: #b0b0b0;
+    --input-bg: #2c2c2c;
+    --border-color: #333;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+    color: var(--accent-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Cards */
+.card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--secondary-text);
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="date"],
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-color);
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: 2px solid var(--accent-color);
+    border-color: transparent;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: #000;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-1px);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+}
+
+/* Login Page */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-header h2 {
+    color: var(--accent-color);
+    margin: 0;
+}
+
+/* Dashboard */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.task-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.task-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s;
+    position: relative;
+}
+
+.task-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-color);
+}
+
+.task-status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.status-pending {
+    background-color: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+}
+
+.status-completed {
+    background-color: rgba(0, 230, 118, 0.2);
+    color: #00e676;
+}
+
+.task-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--card-bg);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.nav-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.nav-links a {
+    margin-left: 20px;
+    color: var(--text-color);
+}
+
+.nav-links a:hover {
+    color: var(--accent-color);
+}
+
+/* Dashboard Layout */
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 20px;
+}
+
+.sidebar {
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+}
+
+@media (max-width: 768px) {
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        position: static;
+    }
+}
+
+/* Mini Calendar Widget */
+.calendar-widget {
+    padding: 1.5rem;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.btn-icon:hover {
+    background-color: var(--input-bg);
+    color: var(--accent-color);
+}
+
+.calendar-grid-mini {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    /* Increased gap for better separation */
+    margin-bottom: 1rem;
+}
+
+.cal-header {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--secondary-text);
+    padding: 5px 0;
+}
+
+.cal-day {
+    aspect-ratio: 1;
+    /* Make them square */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    /* Rounded corners like the icon */
+    border: 1px solid var(--border-color);
+    background-color: #ffffff;
+    /* Default White */
+    color: #000;
+    /* Black text for visibility on white */
+    cursor: default;
+    transition: transform 0.2s;
+}
+
+.cal-day:hover {
+    transform: scale(1.05);
+}
+
+.cal-day.today {
+    border: 2px solid var(--accent-color);
+    font-weight: bold;
+}
+
+/* Status Colors */
+.cal-day.pending {
+    background-color: #ffeb3b;
+    /* Yellow */
+    color: #000;
+    border-color: #fbc02d;
+}
+
+.cal-day.completed {
+    background-color: #00e676;
+    /* Green */
+    color: #000;
+    border-color: #00c853;
+}
+
+.cal-day.empty {
+    background-color: #ffffff;
+    color: #000;
+}
+
+/* Hide the old dots */
+.day-dot {
+    display: none;
+}
+
+.calendar-legend {
+    display: flex;
+    justify-content: space-around;
+    font-size: 0.8rem;
+    color: var(--secondary-text);
+    margin-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+}
+
+.dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+    /* Square-ish legend */
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.dot.pending {
+    background-color: #ffeb3b;
+    border: 1px solid #fbc02d;
+}
+
+.dot.completed {
+    background-color: #00e676;
+    border: 1px solid #00c853;
+}
+
+.dot.remaining {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+}

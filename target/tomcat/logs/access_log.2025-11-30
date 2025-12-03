@@ -1,0 +1,11 @@
+0:0:0:0:0:0:0:1 - - [30/Nov/2025:11:39:07 +0530] "POST /JFSD/login HTTP/1.1" 302 - http-bio-9091-exec-6 481
+0:0:0:0:0:0:0:1 - - [30/Nov/2025:11:39:07 +0530] "GET /JFSD/dashboard HTTP/1.1" 200 10580 http-bio-9091-exec-6 82
+0:0:0:0:0:0:0:1 - - [30/Nov/2025:11:39:07 +0530] "GET /JFSD/css/style.css HTTP/1.1" 304 - http-bio-9091-exec-6 8
+0:0:0:0:0:0:0:1 - - [30/Nov/2025:11:39:12 +0530] "GET /JFSD/edit?id=5 HTTP/1.1" 200 2928 http-bio-9091-exec-6 73
+0:0:0:0:0:0:0:1 - - [30/Nov/2025:11:39:14 +0530] "GET /JFSD/dashboard HTTP/1.1" 200 10580 http-bio-9091-exec-6 57
+0:0:0:0:0:0:0:1 - - [30/Nov/2025:11:39:18 +0530] "GET /JFSD/new HTTP/1.1" 200 2797 http-bio-9091-exec-6 7
+0:0:0:0:0:0:0:1 - - [30/Nov/2025:11:39:21 +0530] "GET /JFSD/dashboard HTTP/1.1" 200 10580 http-bio-9091-exec-6 67
+0:0:0:0:0:0:0:1 - - [30/Nov/2025:11:39:27 +0530] "GET /JFSD/dashboard HTTP/1.1" 200 10580 http-bio-9091-exec-6 81
+0:0:0:0:0:0:0:1 - - [30/Nov/2025:11:39:53 +0530] "GET /JFSD/logout HTTP/1.1" 302 - http-bio-9091-exec-6 2
+0:0:0:0:0:0:0:1 - - [30/Nov/2025:11:39:53 +0530] "GET /JFSD/login.jsp HTTP/1.1" 200 1843 http-bio-9091-exec-6 6
+0:0:0:0:0:0:0:1 - - [30/Nov/2025:11:39:55 +0530] "GET /JFSD/register.jsp HTTP/1.1" 200 2024 http-bio-9091-exec-6 13

@@ -7,16 +7,18 @@ public class Task {
     private String title;
     private String description;
     private String status;
+    private String category;
     private Date dueDate;
     private int userId;
 
     public Task() {}
 
-    public Task(int id, String title, String description, String status, Date dueDate, int userId) {
+    public Task(int id, String title, String description, String status, String category, Date dueDate, int userId) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.status = status;
+        this.category = category;
         this.dueDate = dueDate;
         this.userId = userId;
     }
@@ -32,6 +34,9 @@ public class Task {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
 
     public Date getDueDate() { return dueDate; }
     public void setDueDate(Date dueDate) { this.dueDate = dueDate; }

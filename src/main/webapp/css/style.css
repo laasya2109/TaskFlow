@@ -28,11 +28,10 @@ a {
 }
 
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
     width: 100%;
+    padding: 24px 40px;
     box-sizing: border-box;
+    margin: 0;
 }
 
 /* Cards */
@@ -142,8 +141,8 @@ select:focus {
 
 .task-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 24px;
 }
 
 .task-card {
@@ -153,11 +152,21 @@ select:focus {
     border: 1px solid var(--border-color);
     transition: transform 0.2s;
     position: relative;
+    margin-bottom: 8px;
 }
 
 .task-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
     border-color: var(--accent-color);
+}
+
+.category-badge {
+    display: inline-block;
+    color: var(--secondary-text);
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .task-status {
@@ -177,6 +186,11 @@ select:focus {
 .status-completed {
     background-color: rgba(0, 230, 118, 0.2);
     color: #00e676;
+}
+
+.status-overdue {
+    background-color: rgba(255, 82, 82, 0.2);
+    color: var(--danger-color);
 }
 
 .task-actions {
@@ -213,15 +227,22 @@ select:focus {
 
 /* Dashboard Layout */
 .dashboard-layout {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 40px;
+    width: 100%;
+}
+
+.main-content {
+    flex: 1;
+    min-width: 0;
 }
 
 .sidebar {
+    width: 240px;
     position: sticky;
     top: 20px;
-    height: fit-content;
 }
 
 @media (max-width: 768px) {
@@ -236,7 +257,9 @@ select:focus {
 
 /* Mini Calendar Widget */
 .calendar-widget {
-    padding: 1.5rem;
+    padding: 1rem;
+    max-width: 220px;
+    margin-left: auto;
 }
 
 .calendar-header {
@@ -265,8 +288,7 @@ select:focus {
 .calendar-grid-mini {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
-    /* Increased gap for better separation */
+    gap: 6px;
     margin-bottom: 1rem;
 }
 
@@ -279,20 +301,19 @@ select:focus {
 
 .cal-day {
     aspect-ratio: 1;
-    /* Make them square */
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.9rem;
-    border-radius: 8px;
-    /* Rounded corners like the icon */
-    border: 1px solid var(--border-color);
-    background-color: #ffffff;
-    /* Default White */
-    color: #000;
-    /* Black text for visibility on white */
+    font-size: 0.7rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.03);
+    color: var(--text-color);
     cursor: default;
-    transition: transform 0.2s;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 24px;
 }
 
 .cal-day:hover {
@@ -300,28 +321,32 @@ select:focus {
 }
 
 .cal-day.today {
-    border: 2px solid var(--accent-color);
+    border: 1.5px solid var(--accent-color);
+    background-color: rgba(41, 121, 255, 0.1);
+    color: var(--accent-color);
     font-weight: bold;
+    box-shadow: 0 0 10px rgba(41, 121, 255, 0.2);
 }
 
-/* Status Colors */
-.cal-day.pending {
-    background-color: #ffeb3b;
-    /* Yellow */
-    color: #000;
-    border-color: #fbc02d;
+/* Status Indicators as Bottom Accents */
+.cal-day.pending::after,
+.cal-day.completed::after,
+.cal-day.overdue::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
 }
 
-.cal-day.completed {
-    background-color: #00e676;
-    /* Green */
-    color: #000;
-    border-color: #00c853;
-}
+.cal-day.pending::after { background-color: #ffeb3b; }
+.cal-day.completed::after { background-color: #00e676; }
+.cal-day.overdue::after { background-color: #ff5252; }
 
 .cal-day.empty {
-    background-color: #ffffff;
-    color: #000;
+    background-color: transparent;
+    color: var(--secondary-text);
 }
 
 /* Hide the old dots */
@@ -357,6 +382,11 @@ select:focus {
 .dot.completed {
     background-color: #00e676;
     border: 1px solid #00c853;
+}
+
+.dot.overdue {
+    background-color: #ff5252;
+    border: 1px solid #d50000;
 }
 
 .dot.remaining {

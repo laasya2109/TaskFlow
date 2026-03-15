@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     title VARCHAR(255) NOT NULL,
     description TEXT,
     status VARCHAR(20) DEFAULT 'Pending', -- Pending, Completed
+    category VARCHAR(50) DEFAULT 'Personal', -- Work, Personal
     due_date DATE,
     user_id INT,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE

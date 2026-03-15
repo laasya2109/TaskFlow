@@ -10,15 +10,16 @@ import java.util.List;
 public class TaskDAO {
 
     public void addTask(Task task) {
-        String sql = "INSERT INTO tasks (title, description, status, due_date, user_id) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO tasks (title, description, status, category, due_date, user_id) VALUES (?, ?, ?, TRIM(?), ?, ?)";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, task.getTitle());
             pstmt.setString(2, task.getDescription());
             pstmt.setString(3, task.getStatus());
-            pstmt.setDate(4, task.getDueDate());
-            pstmt.setInt(5, task.getUserId());
+            pstmt.setString(4, task.getCategory());
+            pstmt.setDate(5, task.getDueDate());
+            pstmt.setInt(6, task.getUserId());
 
             pstmt.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
@@ -26,14 +27,15 @@ public class TaskDAO {
         }
     }
 
-    public List<Task> getTasksByUserId(int userId) {
+    public List<Task> getTasksByUserIdAndCategory(int userId, String category) {
         List<Task> tasks = new ArrayList<>();
-        String sql = "SELECT * FROM tasks WHERE user_id = ? ORDER BY due_date ASC";
+        String sql = "SELECT * FROM tasks WHERE user_id = ? AND TRIM(category) = ? ORDER BY due_date ASC";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, userId);
+            pstmt.setString(2, category);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Task task = new Task();
@@ -41,6 +43,7 @@ public class TaskDAO {
                     task.setTitle(rs.getString("title"));
                     task.setDescription(rs.getString("description"));
                     task.setStatus(rs.getString("status"));
+                    task.setCategory(rs.getString("category"));
                     task.setDueDate(rs.getDate("due_date"));
                     task.setUserId(rs.getInt("user_id"));
                     tasks.add(task);
@@ -67,6 +70,7 @@ public class TaskDAO {
                     task.setTitle(rs.getString("title"));
                     task.setDescription(rs.getString("description"));
                     task.setStatus(rs.getString("status"));
+                    task.setCategory(rs.getString("category"));
                     task.setDueDate(rs.getDate("due_date"));
                     task.setUserId(rs.getInt("user_id"));
                 }
@@ -78,15 +82,16 @@ public class TaskDAO {
     }
 
     public void updateTask(Task task) {
-        String sql = "UPDATE tasks SET title = ?, description = ?, status = ?, due_date = ? WHERE id = ?";
+        String sql = "UPDATE tasks SET title = ?, description = ?, status = ?, category = TRIM(?), due_date = ? WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, task.getTitle());
             pstmt.setString(2, task.getDescription());
             pstmt.setString(3, task.getStatus());
-            pstmt.setDate(4, task.getDueDate());
-            pstmt.setInt(5, task.getId());
+            pstmt.setString(4, task.getCategory());
+            pstmt.setDate(5, task.getDueDate());
+            pstmt.setInt(6, task.getId());
 
             pstmt.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {

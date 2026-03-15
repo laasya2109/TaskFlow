@@ -1,0 +1,16 @@
+com\taskmanager\controller\CategoryServlet.class
+com\taskmanager\dao\TaskDAO.class
+com\taskmanager\controller\RegisterServlet.class
+com\taskmanager\util\TestConnection.class
+com\taskmanager\util\DatabaseSetup.class
+com\taskmanager\controller\LoginServlet.class
+com\taskmanager\dao\UserDAO.class
+com\taskmanager\controller\TaskServlet.class
+com\taskmanager\controller\CalendarServlet.class
+com\taskmanager\util\DatabaseCheck.class
+com\taskmanager\util\CheckUsers.class
+com\taskmanager\util\DBConnection.class
+com\taskmanager\controller\MigrationServlet.class
+com\taskmanager\model\User.class
+com\taskmanager\controller\LogoutServlet.class
+com\taskmanager\model\Task.class

@@ -31,7 +31,13 @@ public class CalendarServlet extends HttpServlet {
             return;
         }
 
-        List<Task> tasks = taskDAO.getTasksByUserId(user.getId());
+        String category = (String) session.getAttribute("activeCategory");
+        if (category == null || category.isEmpty()) {
+            response.sendRedirect("select-category.jsp");
+            return;
+        }
+
+        List<Task> tasks = taskDAO.getTasksByUserIdAndCategory(user.getId(), category);
         request.setAttribute("tasks", tasks);
         request.getRequestDispatcher("calendar.jsp").forward(request, response);
     }

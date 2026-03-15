@@ -71,8 +71,18 @@ public class TaskServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user") != null) {
+            // Force category retrieval from session
+            String category = (String) session.getAttribute("activeCategory");
+
+            if (category == null || category.isEmpty()) {
+                response.sendRedirect("select-category.jsp");
+                return;
+            }
+
             User user = (User) session.getAttribute("user");
-            List<Task> listTasks = taskDAO.getTasksByUserId(user.getId());
+            System.out.println("[DEBUG] Listing tasks for User: " + user.getUsername() + " | Category: " + category);
+            
+            List<Task> listTasks = taskDAO.getTasksByUserIdAndCategory(user.getId(), category);
             request.setAttribute("listTasks", listTasks);
             RequestDispatcher dispatcher = request.getRequestDispatcher("dashboard.jsp");
             dispatcher.forward(request, response);
@@ -103,9 +113,13 @@ public class TaskServlet extends HttpServlet {
             String title = request.getParameter("title");
             String description = request.getParameter("description");
             String status = request.getParameter("status");
+            String category = (String) session.getAttribute("activeCategory");
+            if (category == null) {
+                 category = "Personal"; // Fallback
+            }
             Date dueDate = Date.valueOf(request.getParameter("dueDate"));
 
-            Task newTask = new Task(0, title, description, status, dueDate, user.getId());
+            Task newTask = new Task(0, title, description, status, category, dueDate, user.getId());
             taskDAO.addTask(newTask);
             response.sendRedirect("dashboard");
         } else {
@@ -114,20 +128,16 @@ public class TaskServlet extends HttpServlet {
     }
 
     private void updateTask(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession(false);
         int id = Integer.parseInt(request.getParameter("id"));
         String title = request.getParameter("title");
         String description = request.getParameter("description");
         String status = request.getParameter("status");
+        String category = (session != null && session.getAttribute("activeCategory") != null) 
+                          ? (String) session.getAttribute("activeCategory") : "Personal";
         Date dueDate = Date.valueOf(request.getParameter("dueDate"));
 
-        // userId is not updated, but needed for constructor or we can fetch it.
-        // For simplicity, we just update fields.
-        // Actually, we need to be careful not to lose userId if we use the constructor.
-        // Let's fetch the old task to be safe or just pass 0 if DAO update doesn't
-        // touch userId.
-        // DAO updateTask uses ID to update other fields, doesn't touch userId.
-
-        Task task = new Task(id, title, description, status, dueDate, 0);
+        Task task = new Task(id, title, description, status, category, dueDate, 0);
         taskDAO.updateTask(task);
         response.sendRedirect("dashboard");
     }

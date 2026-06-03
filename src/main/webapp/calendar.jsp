@@ -113,8 +113,9 @@
                                 id: ${task.id},
                                 title: "${task.title}",
                                 date: "${task.dueDate}",
-                                status: "${task.status}"
-                            }${not status.last ? ',' : ''}
+                                status: "${task.status}",
+                                hasTime: ${task.hasTime}
+                            }${status.last ? '' : ','}
                         </c:forEach>
                     ];
 
@@ -174,23 +175,42 @@
 
                             // Find tasks for this day
                             const dateStr = year + "-" + String(month + 1).padStart(2, '0') + "-" + String(i).padStart(2, '0');
+                            
+                            const now = new Date();
+                            const nowStr = now.getFullYear() + "-" + 
+                                             String(now.getMonth() + 1).padStart(2, '0') + "-" + 
+                                             String(now.getDate()).padStart(2, '0') + "T" +
+                                             String(now.getHours()).padStart(2, '0') + ":" +
+                                             String(now.getMinutes()).padStart(2, '0');
 
                             tasks.forEach(task => {
-                                if (task.date === dateStr) {
+                                const taskDateOnly = task.date.substring(0, 10);
+                                if (taskDateOnly === dateStr) {
                                     const taskDiv = document.createElement('div');
                                     taskDiv.className = 'task-dot';
+                                    
                                     if (task.status === 'Completed') {
                                         taskDiv.classList.add('completed');
                                     } else {
-                                        // Check if overdue
-                                        const todayStr = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, '0') + "-" + String(today.getDate()).padStart(2, '0');
-                                        if (task.date < todayStr) {
-                                            taskDiv.classList.add('overdue');
-                                            taskDiv.title = task.title + " (Overdue)";
+                                        if (task.hasTime) {
+                                            const taskTime = task.date.substring(0, 16).replace(' ', 'T');
+                                            if (taskTime < nowStr) {
+                                               taskDiv.classList.add('overdue');
+                                            }
+                                        } else {
+                                            if (taskDateOnly < nowStr.substring(0, 10)) {
+                                                taskDiv.classList.add('overdue');
+                                            }
                                         }
                                     }
-                                    taskDiv.textContent = task.title;
-                                    taskDiv.title = task.title;
+                                    
+                                    let timeLabel = "";
+                                    if (task.hasTime) {
+                                        timeLabel = " (" + task.date.substring(11, 16) + ")";
+                                    }
+                                    
+                                    taskDiv.textContent = task.title + timeLabel;
+                                    taskDiv.title = task.title + (task.hasTime ? " @ " + task.date.substring(11, 16) : "");
                                     div.appendChild(taskDiv);
                                 }
                             });

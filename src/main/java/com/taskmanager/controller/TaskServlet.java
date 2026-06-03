@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
-@WebServlet({ "/dashboard", "/new", "/insert", "/delete", "/edit", "/update" })
+@WebServlet({ "/dashboard", "/new", "/insert", "/delete", "/edit", "/update", "/toggleStatus" })
 public class TaskServlet extends HttpServlet {
     private TaskDAO taskDAO;
 
@@ -49,6 +49,9 @@ public class TaskServlet extends HttpServlet {
                 case "/update":
                     updateTask(request, response);
                     break;
+                case "/toggleStatus":
+                    toggleStatus(request, response);
+                    break;
                 case "/dashboard":
                     listTasks(request, response);
                     break;
@@ -80,9 +83,20 @@ public class TaskServlet extends HttpServlet {
             }
 
             User user = (User) session.getAttribute("user");
-            System.out.println("[DEBUG] Listing tasks for User: " + user.getUsername() + " | Category: " + category);
+            String query = request.getParameter("q");
+            String filterStatus = request.getParameter("status");
+            String filterCategory = request.getParameter("category");
+
+            List<Task> listTasks;
+            if (query != null || filterStatus != null || filterCategory != null) {
+                // If filterCategory is not provided, we might want to stay in current category or search globally
+                // For now, let's assume search bar in dashboard defaults to current category unless explicitly changed
+                String searchCat = (filterCategory != null) ? filterCategory : category;
+                listTasks = taskDAO.searchTasks(user.getId(), query, searchCat, filterStatus);
+            } else {
+                listTasks = taskDAO.getTasksByUserIdAndCategory(user.getId(), category);
+            }
             
-            List<Task> listTasks = taskDAO.getTasksByUserIdAndCategory(user.getId(), category);
             request.setAttribute("listTasks", listTasks);
             RequestDispatcher dispatcher = request.getRequestDispatcher("dashboard.jsp");
             dispatcher.forward(request, response);
@@ -117,9 +131,26 @@ public class TaskServlet extends HttpServlet {
             if (category == null) {
                  category = "Personal"; // Fallback
             }
-            Date dueDate = Date.valueOf(request.getParameter("dueDate"));
+            
+            
+            String rawDate = request.getParameter("dueDate");
+            String rawTime = request.getParameter("dueTime");
+            System.out.println("[DEBUG] Raw Date: " + rawDate + " | Raw Time: " + rawTime);
+            
+            boolean hasTime = (rawTime != null && !rawTime.trim().isEmpty());
+            String timestampStr = rawDate + " " + (hasTime ? rawTime : "00:00") + ":00";
+            
+            Timestamp dueDate;
+            try {
+                dueDate = Timestamp.valueOf(timestampStr);
+            } catch (Exception e) {
+                System.err.println("[ERROR] Failed to parse date: " + timestampStr + ". Using current time.");
+                dueDate = new Timestamp(System.currentTimeMillis());
+                hasTime = false;
+            }
+            System.out.println("[DEBUG] Final Timestamp: " + dueDate + " | HasTime: " + hasTime);
 
-            Task newTask = new Task(0, title, description, status, category, dueDate, user.getId());
+            Task newTask = new Task(0, title, description, status, category, dueDate, user.getId(), hasTime);
             taskDAO.addTask(newTask);
             response.sendRedirect("dashboard");
         } else {
@@ -135,9 +166,28 @@ public class TaskServlet extends HttpServlet {
         String status = request.getParameter("status");
         String category = (session != null && session.getAttribute("activeCategory") != null) 
                           ? (String) session.getAttribute("activeCategory") : "Personal";
-        Date dueDate = Date.valueOf(request.getParameter("dueDate"));
+        
+        String rawDate = request.getParameter("dueDate");
+        String rawTime = request.getParameter("dueTime");
+        System.out.println("[DEBUG] Updating Task - Raw Date: " + rawDate + " | Raw Time: " + rawTime);
+        
+        boolean hasTime = (rawTime != null && !rawTime.trim().isEmpty());
+        String timestampStr = rawDate + " " + (hasTime ? rawTime : "00:00") + ":00";
 
-        Task task = new Task(id, title, description, status, category, dueDate, 0);
+        Timestamp dueDate;
+        try {
+            dueDate = Timestamp.valueOf(timestampStr);
+        } catch (Exception e) {
+            System.err.println("[ERROR] Failed to parse date: " + timestampStr + ". Using current time.");
+            dueDate = new Timestamp(System.currentTimeMillis());
+            hasTime = false;
+        }
+        System.out.println("[DEBUG] Updating Task - Parsed Timestamp: " + dueDate + " | HasTime: " + hasTime);
+
+        User user = (User) session.getAttribute("user");
+        int userId = (user != null) ? user.getId() : 0;
+        
+        Task task = new Task(id, title, description, status, category, dueDate, userId, hasTime);
         taskDAO.updateTask(task);
         response.sendRedirect("dashboard");
     }
@@ -146,5 +196,19 @@ public class TaskServlet extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         taskDAO.deleteTask(id);
         response.sendRedirect("dashboard");
+    }
+
+    private void toggleStatus(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("user") != null) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            String status = request.getParameter("status");
+            if ("Completed".equals(status) || "Pending".equals(status)) {
+                taskDAO.updateTaskStatus(id, status);
+            }
+            response.sendRedirect("dashboard");
+        } else {
+            response.sendRedirect("login.jsp");
+        }
     }
 }

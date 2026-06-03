@@ -1,6 +1,6 @@
 package com.taskmanager.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Task {
     private int id;
@@ -8,12 +8,13 @@ public class Task {
     private String description;
     private String status;
     private String category;
-    private Date dueDate;
+    private Timestamp dueDate;
     private int userId;
+    private boolean hasTime;
 
     public Task() {}
 
-    public Task(int id, String title, String description, String status, String category, Date dueDate, int userId) {
+    public Task(int id, String title, String description, String status, String category, Timestamp dueDate, int userId, boolean hasTime) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -21,6 +22,7 @@ public class Task {
         this.category = category;
         this.dueDate = dueDate;
         this.userId = userId;
+        this.hasTime = hasTime;
     }
 
     public int getId() { return id; }
@@ -38,9 +40,12 @@ public class Task {
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
 
-    public Date getDueDate() { return dueDate; }
-    public void setDueDate(Date dueDate) { this.dueDate = dueDate; }
+    public Timestamp getDueDate() { return dueDate; }
+    public void setDueDate(Timestamp dueDate) { this.dueDate = dueDate; }
 
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }
+
+    public boolean getHasTime() { return hasTime; }
+    public void setHasTime(boolean hasTime) { this.hasTime = hasTime; }
 }

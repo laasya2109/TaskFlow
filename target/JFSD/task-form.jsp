@@ -54,8 +54,27 @@
 
                         <div class="form-group">
                             <label for="dueDate">Due Date</label>
-                            <input type="date" id="dueDate" name="dueDate" value="<c:out value='${task.dueDate}' />"
-                                required>
+                            <%
+                                String fDate = "";
+                                String fTime = "";
+                                Object taskObj = request.getAttribute("task");
+                                if (taskObj != null) {
+                                    com.taskmanager.model.Task t = (com.taskmanager.model.Task) taskObj;
+                                    if (t.getDueDate() != null) {
+                                        fDate = t.getDueDate().toString().substring(0, 10);
+                                        if (t.getHasTime()) {
+                                            fTime = t.getDueDate().toString().substring(11, 16);
+                                        }
+                                    }
+                                }
+                            %>
+                            <input type="date" id="dueDate" name="dueDate" value="<%= fDate %>" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dueTime">Due Time (Optional)</label>
+                            <input type="time" id="dueTime" name="dueTime" value="<%= fTime %>">
+                            <small style="color: var(--secondary-text);">Leave empty if no specific time is needed.</small>
                         </div>
 
                         <div style="display: flex; gap: 10px; margin-top: 2rem;">

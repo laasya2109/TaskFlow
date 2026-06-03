@@ -14,8 +14,9 @@ CREATE TABLE IF NOT EXISTS tasks (
     description TEXT,
     status VARCHAR(20) DEFAULT 'Pending', -- Pending, Completed
     category VARCHAR(50) DEFAULT 'Personal', -- Work, Personal
-    due_date DATE,
+    due_date DATETIME,
     user_id INT,
+    has_time BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 

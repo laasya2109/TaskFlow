@@ -1,10 +1,13 @@
 com\taskmanager\controller\CategoryServlet.class
 com\taskmanager\dao\TaskDAO.class
 com\taskmanager\controller\RegisterServlet.class
+com\taskmanager\controller\AddCategoryServlet.class
 com\taskmanager\util\TestConnection.class
 com\taskmanager\util\DatabaseSetup.class
+com\taskmanager\dao\CategoryDAO.class
 com\taskmanager\controller\LoginServlet.class
 com\taskmanager\dao\UserDAO.class
+com\taskmanager\model\Category.class
 com\taskmanager\controller\TaskServlet.class
 com\taskmanager\controller\CalendarServlet.class
 com\taskmanager\util\DatabaseCheck.class

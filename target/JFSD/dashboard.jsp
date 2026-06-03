@@ -28,9 +28,22 @@
                             <a href="new" class="btn btn-primary">+ Add New Task</a>
                         </div>
 
+                        <div class="search-filter-bar">
+                            <form action="dashboard" method="get" style="display: contents;">
+                                <input type="text" name="q" class="search-input" placeholder="Search tasks..." value="${param.q}">
+                                <select name="status" class="filter-select" onchange="this.form.submit()">
+                                    <option value="All" ${param.status == 'All' ? 'selected' : ''}>All Status</option>
+                                    <option value="Pending" ${param.status == 'Pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="Completed" ${param.status == 'Completed' ? 'selected' : ''}>Completed</option>
+                                </select>
+                                <button type="submit" style="display:none"></button>
+                            </form>
+                        </div>
+
                         <div class="task-grid">
                             <c:forEach var="task" items="${listTasks}">
                                 <div class="task-card">
+                                    <div data-has-time="${task.hasTime}" style="display:none"></div>
                                     <c:choose>
                                         <c:when test="${task.status == 'Completed'}">
                                             <span class="task-status status-completed">Completed</span>
@@ -52,16 +65,20 @@
                                     </p>
                                     <div style="font-size: 0.9rem; color: var(--secondary-text); margin-bottom: 1rem;">
                                         Due:
-                                        <c:out value="${task.dueDate}" />
+                                        <c:out value="${task.dueDate.toString().substring(0, 10)}" />
+                                        <c:if test="${task.hasTime}">
+                                            <span> @ <c:out value="${task.dueDate.toString().substring(11, 16)}" /></span>
+                                        </c:if>
                                     </div>
                                     <div class="task-actions">
                                         <a href="edit?id=<c:out value='${task.id}' />" class="btn btn-sm"
                                             style="background: #333; color: white;">Edit</a>
                                         <a href="delete?id=<c:out value='${task.id}' />" class="btn btn-sm btn-danger"
                                             onclick="return confirm('Are you sure?')">Delete</a>
-                                    </div>
+                                    </div> <!-- End task-actions -->
+                                </div> <!-- End task-card -->
                             </c:forEach>
-                        </div>
+                        </div> <!-- End task-grid -->
 
                         <c:if test="${empty listTasks}">
                             <div style="text-align: center; padding: 4rem; color: var(--secondary-text);">
@@ -97,8 +114,9 @@
                         <c:forEach items="${listTasks}" var="task" varStatus="status">
                             {
                                 date: "${task.dueDate}",
-                                status: "${task.status}"
-                            }${not status.last ? ',' : ''}
+                                status: "${task.status}",
+                                hasTime: ${task.hasTime}
+                            }${status.last ? '' : ','}
                         </c:forEach>
                     ];
 
@@ -186,6 +204,40 @@
                     };
 
                     renderCalendar();
+
+                    // Live "Auto-Overdue" Tracker (Runs every 30 seconds)
+                    setInterval(() => {
+                        const now = new Date();
+                        const todayStr = now.getFullYear() + "-" + 
+                                         String(now.getMonth() + 1).padStart(2, '0') + "-" + 
+                                         String(now.getDate()).padStart(2, '0');
+                        
+                        const nowTimeStr = todayStr + " " +
+                                         String(now.getHours()).padStart(2, '0') + ":" +
+                                         String(now.getMinutes()).padStart(2, '0');
+
+                        document.querySelectorAll('.task-status.status-pending').forEach(el => {
+                            const dueDate = el.getAttribute('data-due-date'); 
+                            if (dueDate) {
+                                const hasTimeAttr = el.closest('.task-card').querySelector('[data-has-time]');
+                                const hasTime = (hasTimeAttr && hasTimeAttr.getAttribute('data-has-time') === 'true');
+                                
+                                if (hasTime) {
+                                    const dueTimeStr = dueDate.substring(0, 16).replace('T', ' ');
+                                    if (dueTimeStr < nowTimeStr) {
+                                        el.className = "task-status status-overdue";
+                                        el.innerText = "Overdue";
+                                    }
+                                } else {
+                                    const dueDateOnly = dueDate.substring(0, 10);
+                                    if (dueDateOnly < todayStr) {
+                                        el.className = "task-status status-overdue";
+                                        el.innerText = "Overdue";
+                                    }
+                                }
+                            }
+                        });
+                    }, 30000);
                 })();
             </script>
         </body>

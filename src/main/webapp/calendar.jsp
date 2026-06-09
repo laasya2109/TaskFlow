@@ -5,6 +5,8 @@
             <html>
 
             <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Calendar - Task Manager</title>
                 <link rel="stylesheet" href="css/style.css">
                 <style>
@@ -77,6 +79,23 @@
                     .task-dot.overdue {
                         background-color: var(--danger-color);
                         color: #fff;
+                    }
+
+                    @media (max-width: 768px) {
+                        .calendar-grid {
+                            gap: 4px;
+                        }
+                        .calendar-day {
+                            min-height: 50px;
+                            padding: 6px 4px;
+                        }
+                        .day-number {
+                            font-size: 0.8rem;
+                        }
+                        .task-dot {
+                            font-size: 0.6rem;
+                            padding: 1px 2px;
+                        }
                     }
                 </style>
             </head>

@@ -4,6 +4,8 @@
         <html>
 
         <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Dashboard - Task Manager</title>
             <link rel="stylesheet" href="css/style.css">
             <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -31,9 +33,11 @@
                         </div>
 
                         <div class="search-filter-bar">
-                            <span style="position: absolute; left: 16px; color: var(--secondary-text); pointer-events: none; display: flex; align-items: center; justify-content: center; height: 100%; top: 0; font-size: 0.9rem;">🔍</span>
                             <form action="dashboard" method="get" style="display: contents;" onsubmit="event.preventDefault();">
-                                <input type="text" name="q" class="search-input" placeholder="Search tasks..." value="${param.q}" oninput="filterTasks()">
+                                <div class="search-input-wrapper" style="position: relative; flex: 1;">
+                                    <span style="position: absolute; left: 12px; color: var(--secondary-text); pointer-events: none; display: flex; align-items: center; justify-content: center; height: 100%; top: 0; font-size: 0.9rem;">🔍</span>
+                                    <input type="text" name="q" class="search-input" placeholder="Search tasks..." value="${param.q}" oninput="filterTasks()" style="padding-left: 36px !important; width: 100% !important;">
+                                </div>
                                 <select name="status" class="filter-select" onchange="filterTasks()">
                                     <option value="All" ${param.status == 'All' ? 'selected' : ''}>All Status</option>
                                     <option value="Pending" ${param.status == 'Pending' ? 'selected' : ''}>Pending</option>

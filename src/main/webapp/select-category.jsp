@@ -17,6 +17,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Category - Task Manager</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
@@ -168,6 +170,17 @@
 
         .modal-btn:hover {
             opacity: 0.9;
+        }
+        
+        @media (max-width: 576px) {
+            .category-container {
+                gap: 20px;
+                padding: 1rem;
+            }
+            .category-card {
+                width: 100%;
+                padding: 2rem;
+            }
         }
     </style>
 </head>

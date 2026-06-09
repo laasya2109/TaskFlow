@@ -1,0 +1,10 @@
+0:0:0:0:0:0:0:1 - - [09/Jun/2026:15:05:51 +0530] "GET /JFSD HTTP/1.1" 302 - http-bio-9091-exec-2 0
+0:0:0:0:0:0:0:1 - - [09/Jun/2026:15:05:53 +0530] "GET /JFSD/ HTTP/1.1" 200 1599 http-bio-9091-exec-3 1121
+0:0:0:0:0:0:0:1 - - [09/Jun/2026:15:05:53 +0530] "GET /favicon.ico HTTP/1.1" 404 - http-bio-9091-exec-4 0
+0:0:0:0:0:0:0:1 - - [09/Jun/2026:15:06:01 +0530] "POST /JFSD/login HTTP/1.1" 302 - http-bio-9091-exec-5 1415
+0:0:0:0:0:0:0:1 - - [09/Jun/2026:15:06:02 +0530] "GET /JFSD/select-category.jsp HTTP/1.1" 200 6992 http-bio-9091-exec-6 752
+0:0:0:0:0:0:0:1 - - [09/Jun/2026:15:06:05 +0530] "GET /JFSD/set-category?category=Work HTTP/1.1" 302 - http-bio-9091-exec-7 2
+0:0:0:0:0:0:0:1 - - [09/Jun/2026:15:06:06 +0530] "GET /JFSD/dashboard HTTP/1.1" 200 35666 http-bio-9091-exec-8 411
+0:0:0:0:0:0:0:1 - - [09/Jun/2026:15:06:08 +0530] "GET /JFSD/new HTTP/1.1" 200 3167 http-bio-9091-exec-9 347
+0:0:0:0:0:0:0:1 - - [09/Jun/2026:15:06:24 +0530] "POST /JFSD/insert HTTP/1.1" 302 - http-bio-9091-exec-10 148
+0:0:0:0:0:0:0:1 - - [09/Jun/2026:15:06:25 +0530] "GET /JFSD/dashboard HTTP/1.1" 200 38580 http-bio-9091-exec-10 54

@@ -38,10 +38,7 @@
                         <div style="text-align: center; margin-top: 20px; color: var(--secondary-text);">
                             Don't have an account? <a href="register.jsp">Register here</a>
                         </div>
-                        <div
-                            style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: var(--secondary-text);">
-                            <p>Demo: admin / admin123</p>
-                        </div>
+
             </div>
         </div>
     </body>

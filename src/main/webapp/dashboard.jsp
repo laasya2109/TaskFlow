@@ -32,20 +32,18 @@
                             <a href="new" class="btn btn-primary">+ Add New Task</a>
                         </div>
 
-                        <div class="search-filter-bar">
-                            <form action="dashboard" method="get" style="display: contents;" onsubmit="event.preventDefault();">
-                                <div class="search-input-wrapper" style="position: relative; flex: 1;">
-                                    <span style="position: absolute; left: 12px; color: var(--secondary-text); pointer-events: none; display: flex; align-items: center; justify-content: center; height: 100%; top: 0; font-size: 0.9rem;">🔍</span>
-                                    <input type="text" name="q" class="search-input" placeholder="Search tasks..." value="${param.q}" oninput="filterTasks()" style="padding-left: 36px !important; width: 100% !important;">
-                                </div>
-                                <select name="status" class="filter-select" onchange="filterTasks()">
-                                    <option value="All" ${param.status == 'All' ? 'selected' : ''}>All Status</option>
-                                    <option value="Pending" ${param.status == 'Pending' ? 'selected' : ''}>Pending</option>
-                                    <option value="Completed" ${param.status == 'Completed' ? 'selected' : ''}>Completed</option>
-                                </select>
-                                <button type="submit" style="display:none"></button>
-                            </form>
-                        </div>
+                        <form action="dashboard" method="get" class="search-filter-bar" onsubmit="event.preventDefault();">
+                            <div class="search-input-wrapper" style="position: relative; flex: 1;">
+                                <span style="position: absolute; left: 12px; color: var(--secondary-text); pointer-events: none; display: flex; align-items: center; justify-content: center; height: 100%; top: 0; font-size: 0.9rem;">🔍</span>
+                                <input type="text" name="q" class="search-input" placeholder="Search tasks..." value="${param.q}" oninput="filterTasks()" style="padding-left: 36px !important; width: 100% !important;">
+                            </div>
+                            <select name="status" class="filter-select" onchange="filterTasks()">
+                                <option value="All" ${param.status == 'All' ? 'selected' : ''}>All Status</option>
+                                <option value="Pending" ${param.status == 'Pending' ? 'selected' : ''}>Pending</option>
+                                <option value="Completed" ${param.status == 'Completed' ? 'selected' : ''}>Completed</option>
+                            </select>
+                            <button type="submit" style="display:none"></button>
+                        </form>
 
                         <div class="task-grid">
                             <c:forEach var="task" items="${listTasks}">

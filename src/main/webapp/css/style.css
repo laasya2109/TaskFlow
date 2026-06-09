@@ -280,56 +280,7 @@ select.filter-select {
     top: 20px;
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 16px;
-    }
 
-    .navbar {
-        flex-direction: column;
-        gap: 12px;
-        padding: 1rem;
-        text-align: center;
-    }
-
-    .nav-links {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 12px;
-        width: 100%;
-    }
-
-    .nav-links a, .nav-links span {
-        margin: 0 !important;
-    }
-
-    .dashboard-layout {
-        flex-direction: column;
-        gap: 24px;
-    }
-
-    .sidebar {
-        width: 100%;
-        position: static;
-    }
-
-    .calendar-widget {
-        max-width: 100%;
-        margin: 0;
-    }
-
-    .search-filter-bar {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
-        padding: 12px;
-    }
-
-    select.filter-select {
-        width: 100% !important;
-    }
-}
 
 /* Mini Calendar Widget */
 .calendar-widget {
@@ -468,4 +419,55 @@ select.filter-select {
 .dot.remaining {
     background-color: #ffffff;
     border: 1px solid #ccc;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 16px;
+    }
+
+    .navbar {
+        flex-direction: column;
+        gap: 12px;
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .nav-links a, .nav-links span {
+        margin: 0 !important;
+    }
+
+    .dashboard-layout {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .sidebar {
+        width: 100%;
+        position: static;
+    }
+
+    .calendar-widget {
+        max-width: 100%;
+        margin: 0;
+    }
+
+    .search-filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 12px;
+    }
+
+    select.filter-select {
+        width: 100% !important;
+    }
 }

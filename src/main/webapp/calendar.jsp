@@ -102,9 +102,11 @@
 
             <body>
                 <nav class="navbar">
-                    <div class="nav-brand">Task Manager</div>
+                    <div class="nav-brand">TaskFlow</div>
                     <div class="nav-links">
-                        <a href="dashboard">Dashboard</a>
+                        <a href="dashboard">Tasks</a>
+                        <a href="notes">Notes</a>
+                        <a href="habits">Habits</a>
                         <a href="calendar" class="active" style="color: var(--accent-color);">Calendar</a>
                         <a href="logout">Logout</a>
                     </div>

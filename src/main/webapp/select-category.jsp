@@ -189,6 +189,8 @@
         <div class="nav-brand">TaskFlow</div>
         <div class="nav-links">
             <span>Welcome, ${sessionScope.user.username}</span>
+            <a href="notes">Notes</a>
+            <a href="habits">Habits</a>
             <a href="logout">Logout</a>
         </div>
     </nav>

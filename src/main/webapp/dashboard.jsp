@@ -17,7 +17,9 @@
                 <div class="nav-brand">TaskFlow</div>
                 <div class="nav-links">
                     <span>Welcome, ${sessionScope.user.username}</span>
-                    <a href="dashboard" class="active">Dashboard</a>
+                    <a href="dashboard" class="active">Tasks</a>
+                    <a href="notes">Notes</a>
+                    <a href="habits">Habits</a>
                     <a href="select-category.jsp" style="color: var(--secondary-text);">Switch Category</a>
                     <a href="logout">Logout</a>
                 </div>
@@ -27,9 +29,28 @@
                 <div class="dashboard-layout">
                     <!-- Main Content: Tasks -->
                     <div class="main-content">
+                        <c:if test="${not empty upcomingDueTasks}">
+                            <c:forEach var="dueTask" items="${upcomingDueTasks}">
+                                <div style="background: linear-gradient(135deg, rgba(255, 152, 0, 0.2), rgba(255, 87, 34, 0.3)); border: 1px solid #ff9800; border-radius: 8px; padding: 14px 20px; margin-bottom: 20px; color: #ffeb3b; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <span style="font-size: 1.5rem;">⏰</span>
+                                        <div>
+                                            <strong>1-Hour Task Reminder:</strong> Task <b>"<c:out value="${dueTask.title}" />"</b> is due in less than 1 hour (at <c:out value="${dueTask.dueDate.toString().substring(11, 16)}" />)!
+                                        </div>
+                                    </div>
+                                    <span style="background: #ff9800; color: #000; font-weight: bold; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem;">Due Soon</span>
+                                </div>
+                            </c:forEach>
+                        </c:if>
+
                         <div class="dashboard-header">
                             <h1>My ${sessionScope.activeCategory} Tasks</h1>
-                            <a href="new" class="btn btn-primary">+ Add New Task</a>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <button class="btn" onclick="openAiPlannerModal()" style="background: linear-gradient(135deg, #7c4dff, #2979ff); color: white; border: none; font-weight: 600; box-shadow: 0 4px 15px rgba(124, 77, 255, 0.35); display: flex; align-items: center; gap: 6px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">
+                                    ✨ AI Auto-Plan Goal
+                                </button>
+                                <a href="new" class="btn btn-primary">+ Add New Task</a>
+                            </div>
                         </div>
 
                         <form action="dashboard" method="get" class="search-filter-bar" onsubmit="event.preventDefault();">
@@ -577,6 +598,235 @@
                     </div>
                 </div>
             </div>
+
+            <!-- AI Auto-Planner Modal Overlay -->
+            <div id="aiPlannerModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(12px); z-index: 2100; justify-content: center; align-items: center; transition: opacity 0.3s ease; opacity: 0;">
+                <div class="modal-content" style="background: linear-gradient(145deg, rgba(25, 30, 45, 0.95), rgba(15, 18, 28, 0.98)); border: 1px solid rgba(124, 77, 255, 0.3); border-radius: 20px; padding: 2rem; width: 560px; max-width: 92%; box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 30px rgba(124, 77, 255, 0.15); position: relative; color: #ffffff;">
+                    <button class="modal-close-btn" onclick="closeAiPlannerModal()" style="position: absolute; top: 1.2rem; right: 1.2rem; background: transparent; border: none; font-size: 1.5rem; color: #8a8d9b; cursor: pointer; transition: color 0.2s;">&times;</button>
+                    
+                    <h2 style="margin-top: 0; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 10px; font-size: 1.4rem;">
+                        ✨ AI Task Breakdown & Auto-Planner
+                    </h2>
+                    <p style="color: #a0a5b5; font-size: 0.88rem; margin-top: 0; margin-bottom: 1.5rem; line-height: 1.4;">
+                        Enter any goal or project, and AI will automatically break it down into scheduled, actionable step-by-step tasks.
+                    </p>
+
+                    <!-- Initial State: Prompt Input -->
+                    <div id="aiPlannerInitialState">
+                        <div style="margin-bottom: 1.2rem;">
+                            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #d0d5e5; margin-bottom: 6px;">Your High-Level Goal or Project</label>
+                            <input type="text" id="aiGoalInput" placeholder="e.g. Prepare for Java Tech Interview, Build Web App, Plan Trip..." 
+                                   style="width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 12px 14px; color: #fff; font-size: 0.95rem; outline: none; box-sizing: border-box;">
+                        </div>
+
+                        <!-- Sample Prompt Chips -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <div style="font-size: 0.78rem; color: #8a8d9b; margin-bottom: 8px; font-weight: 500;">Or pick a sample prompt:</div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                <button type="button" onclick="selectPromptChip('Prepare for Java Technical Interview')" style="background: rgba(124, 77, 255, 0.12); border: 1px solid rgba(124, 77, 255, 0.3); color: #b388ff; padding: 5px 12px; border-radius: 16px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;">☕ Java Interview Prep</button>
+                                <button type="button" onclick="selectPromptChip('Build & Deploy Fullstack Web App')" style="background: rgba(41, 121, 255, 0.12); border: 1px solid rgba(41, 121, 255, 0.3); color: #82b1ff; padding: 5px 12px; border-radius: 16px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;">💻 Build Web App</button>
+                                <button type="button" onclick="selectPromptChip('Plan Weekend Getaway Trip')" style="background: rgba(0, 230, 118, 0.12); border: 1px solid rgba(0, 230, 118, 0.3); color: #69f0ae; padding: 5px 12px; border-radius: 16px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;">✈️ Plan Trip</button>
+                                <button type="button" onclick="selectPromptChip('Train & Prepare for 5K Marathon')" style="background: rgba(255, 152, 0, 0.12); border: 1px solid rgba(255, 152, 0, 0.3); color: #ffd180; padding: 5px 12px; border-radius: 16px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;">🏃 5K Fitness Plan</button>
+                            </div>
+                        </div>
+
+                        <!-- Steps Count Selector -->
+                        <div style="margin-bottom: 1.8rem; display: flex; align-items: center; justify-content: space-between;">
+                            <span style="font-size: 0.85rem; color: #d0d5e5; font-weight: 500;">Number of Steps:</span>
+                            <div style="display: flex; gap: 8px;">
+                                <button type="button" class="step-count-btn" onclick="setStepCount(3, this)" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #a0a5b5; padding: 5px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">3 Steps</button>
+                                <button type="button" class="step-count-btn" onclick="setStepCount(4, this)" style="background: linear-gradient(135deg, #7c4dff, #2979ff); border: 1px solid #7c4dff; color: #ffffff; padding: 5px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">4 Steps</button>
+                                <button type="button" class="step-count-btn" onclick="setStepCount(5, this)" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #a0a5b5; padding: 5px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600;">5 Steps</button>
+                            </div>
+                        </div>
+
+                        <button type="button" onclick="generateAiPlan()" style="width: 100%; background: linear-gradient(135deg, #7c4dff, #2979ff); color: white; border: none; padding: 13px; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 6px 20px rgba(124, 77, 255, 0.4); transition: transform 0.15s, box-shadow 0.15s;">
+                            ⚡ Generate AI Task Breakdown
+                        </button>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="aiLoadingState" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 0; text-align: center;">
+                        <div style="width: 48px; height: 48px; border: 4px solid rgba(124, 77, 255, 0.2); border-top-color: #7c4dff; border-radius: 50%; animation: spinAiLoader 1s linear infinite; margin-bottom: 1.2rem;"></div>
+                        <style>
+                            @keyframes spinAiLoader { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                        </style>
+                        <h4 style="margin: 0 0 6px 0; color: #fff; font-size: 1.1rem;">AI Analyzing & Decomposing Goal...</h4>
+                        <p style="margin: 0; color: #8a8d9b; font-size: 0.85rem;">Structuring step-by-step milestones & scheduling target due dates.</p>
+                    </div>
+
+                    <!-- Results Preview State -->
+                    <div id="aiResultsPreviewState" style="display: none;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                            <span style="font-size: 0.9rem; font-weight: 600; color: #b388ff;">Generated Action Plan:</span>
+                            <span style="font-size: 0.78rem; color: #8a8d9b;">Uncheck steps you don't need</span>
+                        </div>
+
+                        <div id="aiTasksContainer" style="max-height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 4px; margin-bottom: 1.5rem;">
+                            <!-- Dynamic tasks preview populated here -->
+                        </div>
+
+                        <div style="display: flex; gap: 12px;">
+                            <button type="button" onclick="resetAiPlannerModal()" style="flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #d0d5e5; padding: 11px; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                                Back / Edit
+                            </button>
+                            <button type="button" id="btnImportAiTasks" onclick="importAiTasks()" style="flex: 2; background: linear-gradient(135deg, #00e676, #00b0ff); color: #000; border: none; padding: 11px; border-radius: 10px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 20px rgba(0, 230, 118, 0.3);">
+                                ✨ Import All Tasks to Dashboard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                (function() {
+                    let generatedAiTasksList = [];
+                    let selectedStepCount = 4;
+
+                    window.openAiPlannerModal = function() {
+                        const modal = document.getElementById('aiPlannerModal');
+                        if (!modal) return;
+                        modal.style.display = 'flex';
+                        setTimeout(() => { modal.style.opacity = '1'; }, 10);
+                        resetAiPlannerModal();
+                    };
+
+                    window.closeAiPlannerModal = function() {
+                        const modal = document.getElementById('aiPlannerModal');
+                        if (!modal) return;
+                        modal.style.opacity = '0';
+                        setTimeout(() => { modal.style.display = 'none'; }, 300);
+                    };
+
+                    window.resetAiPlannerModal = function() {
+                        document.getElementById('aiGoalInput').value = '';
+                        document.getElementById('aiPlannerInitialState').style.display = 'block';
+                        document.getElementById('aiLoadingState').style.display = 'none';
+                        document.getElementById('aiResultsPreviewState').style.display = 'none';
+                        generatedAiTasksList = [];
+                    };
+
+                    window.selectPromptChip = function(text) {
+                        document.getElementById('aiGoalInput').value = text;
+                    };
+
+                    window.setStepCount = function(count, btn) {
+                        selectedStepCount = count;
+                        document.querySelectorAll('.step-count-btn').forEach(b => {
+                            b.style.background = 'rgba(255,255,255,0.05)';
+                            b.style.color = '#a0a5b5';
+                            b.style.borderColor = 'rgba(255,255,255,0.1)';
+                        });
+                        btn.style.background = 'linear-gradient(135deg, #7c4dff, #2979ff)';
+                        btn.style.color = '#ffffff';
+                        btn.style.borderColor = '#7c4dff';
+                    };
+
+                    window.generateAiPlan = function() {
+                        const goal = document.getElementById('aiGoalInput').value.trim();
+                        if (!goal) {
+                            alert('Please enter a goal or select a sample prompt!');
+                            return;
+                        }
+
+                        document.getElementById('aiPlannerInitialState').style.display = 'none';
+                        document.getElementById('aiLoadingState').style.display = 'flex';
+                        document.getElementById('aiResultsPreviewState').style.display = 'none';
+
+                        fetch('${pageContext.request.contextPath}/api/tasks/ai/breakdown?goal=' + encodeURIComponent(goal) + '&stepsCount=' + selectedStepCount, {
+                            method: 'POST'
+                        })
+                        .then(res => res.json())
+                        .then(tasks => {
+                            generatedAiTasksList = tasks;
+                            renderAiTasksPreview(tasks);
+                            document.getElementById('aiLoadingState').style.display = 'none';
+                            document.getElementById('aiResultsPreviewState').style.display = 'block';
+                        })
+                        .catch(err => {
+                            console.error("AI Generation error:", err);
+                            alert("Failed to generate AI plan. Please try again.");
+                            resetAiPlannerModal();
+                        });
+                    };
+
+                    function renderAiTasksPreview(tasks) {
+                        const container = document.getElementById('aiTasksContainer');
+                        container.innerHTML = '';
+
+                        tasks.forEach((task, idx) => {
+                            const item = document.createElement('div');
+                            item.style.cssText = 'background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px 16px; display: flex; align-items: flex-start; gap: 12px;';
+                            
+                            const dateStr = task.dueDate ? String(task.dueDate).substring(0, 10) : '';
+
+                            item.innerHTML = `
+                                <input type="checkbox" id="ai-task-chk-` + idx + `" checked style="width: 18px; height: 18px; margin-top: 3px; cursor: pointer; accent-color: #7c4dff;">
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; font-size: 0.95rem; color: #fff; margin-bottom: 4px;">` + escapeHtml(task.title) + `</div>
+                                    <div style="font-size: 0.82rem; color: var(--secondary-text); margin-bottom: 6px;">` + escapeHtml(task.description) + `</div>
+                                    <div style="font-size: 0.75rem; color: #b388ff; font-weight: 500;">📅 Target Due: ` + dateStr + `</div>
+                                </div>
+                            `;
+                            container.appendChild(item);
+                        });
+                    }
+
+                    function escapeHtml(text) {
+                        if (!text) return '';
+                        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+                    }
+
+                    window.importAiTasks = function() {
+                        const selectedTasks = [];
+                        generatedAiTasksList.forEach((task, idx) => {
+                            const chk = document.getElementById('ai-task-chk-' + idx);
+                            if (chk && chk.checked) {
+                                selectedTasks.push(task);
+                            }
+                        });
+
+                        if (selectedTasks.length === 0) {
+                            alert("Please select at least one task to import!");
+                            return;
+                        }
+
+                        const btn = document.getElementById('btnImportAiTasks');
+                        btn.disabled = true;
+                        btn.innerText = 'Importing Tasks...';
+
+                        fetch('${pageContext.request.contextPath}/api/tasks/ai/saveTasks', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(selectedTasks)
+                        })
+                        .then(res => {
+                            if (res.ok) {
+                                window.location.reload();
+                            } else {
+                                alert("Failed to save tasks.");
+                                btn.disabled = false;
+                                btn.innerText = '✨ Import Selected Tasks';
+                            }
+                        })
+                        .catch(err => {
+                            console.error("Save tasks error:", err);
+                            alert("Error saving tasks.");
+                            btn.disabled = false;
+                            btn.innerText = '✨ Import Selected Tasks';
+                        });
+                    };
+
+                    const modal = document.getElementById('aiPlannerModal');
+                    if (modal) {
+                        modal.addEventListener('click', function(e) {
+                            if (e.target === this) {
+                                closeAiPlannerModal();
+                            }
+                        });
+                    }
+                })();
+            </script>
         </body>
 
         </html>

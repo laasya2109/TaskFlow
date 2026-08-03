@@ -1,16 +1,38 @@
 package com.taskmanager.model;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 
+@Entity
+@Table(name = "tasks")
 public class Task {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(nullable = false, length = 255)
     private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
-    private String status;
-    private String category;
+
+    @Column(length = 20)
+    private String status = "Pending";
+
+    @Column(length = 50)
+    private String category = "Personal";
+
+    @Column(name = "due_date")
     private Timestamp dueDate;
+
+    @Column(name = "user_id")
     private int userId;
+
+    @Column(name = "has_time")
     private boolean hasTime;
+
+    @Column(name = "reminder_sent")
+    private Boolean reminderSent = false;
 
     public Task() {}
 
@@ -23,6 +45,7 @@ public class Task {
         this.dueDate = dueDate;
         this.userId = userId;
         this.hasTime = hasTime;
+        this.reminderSent = false;
     }
 
     public int getId() { return id; }
@@ -48,4 +71,7 @@ public class Task {
 
     public boolean getHasTime() { return hasTime; }
     public void setHasTime(boolean hasTime) { this.hasTime = hasTime; }
+
+    public Boolean isReminderSent() { return reminderSent != null ? reminderSent : false; }
+    public void setReminderSent(Boolean reminderSent) { this.reminderSent = reminderSent; }
 }

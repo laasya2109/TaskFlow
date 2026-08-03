@@ -14,7 +14,9 @@
             <nav class="navbar">
                 <div class="nav-brand">TaskFlow</div>
                 <div class="nav-links">
-                    <a href="dashboard">Back to Dashboard</a>
+                    <a href="dashboard">Tasks</a>
+                    <a href="notes">Notes</a>
+                    <a href="habits">Habits</a>
                     <a href="logout">Logout</a>
                 </div>
             </nav>

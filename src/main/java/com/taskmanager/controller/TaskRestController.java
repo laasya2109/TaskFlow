@@ -5,6 +5,7 @@ import com.taskmanager.model.User;
 import com.taskmanager.service.AiPlannerService;
 import com.taskmanager.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,14 @@ public class TaskRestController {
     private AiPlannerService aiPlannerService;
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> getTasksByUser(@PathVariable int userId) {
+    public ResponseEntity<List<Task>> getTasksByUser(@PathVariable int userId, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (user.getId() != userId) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         return ResponseEntity.ok(taskService.getTasksByUserId(userId));
     }
 
@@ -43,8 +51,15 @@ public class TaskRestController {
                                                      @RequestParam(value = "stepsCount", defaultValue = "4") int stepsCount,
                                                      HttpSession session) {
         User user = (User) session.getAttribute("user");
-        int userId = (user != null) ? user.getId() : 1;
-        String category = (session != null) ? (String) session.getAttribute("activeCategory") : "Personal";
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        int userId = user.getId();
+        String category = (String) session.getAttribute("activeCategory");
+        if (category == null || category.trim().isEmpty()) {
+            category = "Personal";
+        }
 
         List<Task> generatedTasks = aiPlannerService.generateTaskBreakdown(goal, stepsCount, userId, category);
         return ResponseEntity.ok(generatedTasks);
@@ -54,7 +69,7 @@ public class TaskRestController {
     public ResponseEntity<List<Task>> batchSaveTasks(@RequestBody List<Task> tasks, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            return ResponseEntity.status(401).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         String category = (String) session.getAttribute("activeCategory");

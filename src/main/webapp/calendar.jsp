@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-        <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-            <!DOCTYPE html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<!DOCTYPE html>
             <html>
 
             <head>
@@ -126,19 +127,28 @@
                     </div>
                 </div>
 
+                <!-- Safely embed tasks as JSON data element to prevent quotation & XSS breaking JavaScript -->
+                <div id="calendar-task-data" style="display: none;">
+                    <c:forEach items="${tasks}" var="task">
+                        <div class="calendar-task-item"
+                             data-id="${task.id}"
+                             data-title="<c:out value='${task.title}' />"
+                             data-date="${task.dueDate}"
+                             data-status="${task.status}"
+                             data-has-time="${task.hasTime}">
+                        </div>
+                    </c:forEach>
+                </div>
+
                 <script>
-                    // Pass tasks from JSP to JS
-                    const tasks = [
-                        <c:forEach items="${tasks}" var="task" varStatus="status">
-                            {
-                                id: ${task.id},
-                                title: "${task.title}",
-                                date: "${task.dueDate}",
-                                status: "${task.status}",
-                                hasTime: ${task.hasTime}
-                            }${status.last ? '' : ','}
-                        </c:forEach>
-                    ];
+                    // Parse tasks safely from DOM data attributes without inline string interpolation
+                    const tasks = Array.from(document.querySelectorAll('#calendar-task-data .calendar-task-item')).map(el => ({
+                        id: parseInt(el.getAttribute('data-id')),
+                        title: el.getAttribute('data-title'),
+                        date: el.getAttribute('data-date'),
+                        status: el.getAttribute('data-status'),
+                        hasTime: el.getAttribute('data-has-time') === 'true'
+                    }));
 
                     let currentDate = new Date();
 

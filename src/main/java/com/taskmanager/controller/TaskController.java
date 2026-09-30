@@ -40,9 +40,7 @@ public class TaskController {
         List<Task> listTasks = taskService.getTasksByUserIdAndCategory(user.getId(), category);
         model.addAttribute("listTasks", listTasks);
 
-        Timestamp now = new Timestamp(System.currentTimeMillis());
-        Timestamp oneHourLater = new Timestamp(System.currentTimeMillis() + (60 * 60 * 1000));
-        List<Task> upcomingDueTasks = taskRepository.findByDueDateBetweenAndReminderSentFalseAndStatusNot(now, oneHourLater, "Completed");
+        List<Task> upcomingDueTasks = taskRepository.findByUserIdAndReminderSentTrueAndStatusNot(user.getId(), "Completed");
         model.addAttribute("upcomingDueTasks", upcomingDueTasks);
 
         return "dashboard";

@@ -36,13 +36,9 @@ public class TaskReminderScheduler {
                 now, oneHourLater, "Completed");
 
         for (Task task : upcomingTasks) {
-            Optional<User> userOpt = userRepository.findById(task.getUserId());
-            User user = userOpt.orElse(null);
-
-            emailService.sendTaskReminderEmail(user, task);
-
             task.setReminderSent(true);
             taskRepository.save(task);
+            System.out.println("⏰ [IN-APP REMINDER FLAGGED] Task '" + task.getTitle() + "' (ID: " + task.getId() + ") is due soon and flagged for Dashboard.");
         }
     }
 }

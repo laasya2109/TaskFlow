@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+
 public class AiPlannerService {
 
     public List<Task> generateTaskBreakdown(String goal, int stepCount, int userId, String category) {
+
         if (stepCount < 3) stepCount = 3;
         if (stepCount > 6) stepCount = 6;
         if (category == null || category.trim().isEmpty()) {

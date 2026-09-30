@@ -13,4 +13,5 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     List<Task> findByUserIdAndCategory(int userId, String category);
     List<Task> findByUserIdAndStatus(int userId, String status);
     List<Task> findByDueDateBetweenAndReminderSentFalseAndStatusNot(Timestamp start, Timestamp end, String status);
+    List<Task> findByUserIdAndReminderSentTrueAndStatusNot(int userId, String status);
 }
